@@ -1,10 +1,14 @@
-name: Build Windows EXE
+name: Build Multi-Platform EXEs
 
 on: [push]
 
 jobs:
   build:
-    runs-on: windows-latest
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
 
     steps:
     - name: Check out repository
@@ -24,8 +28,8 @@ jobs:
       run: |
         pyinstaller --onedir --windowed gui_launcher.py
 
-    - name: Upload EXE Artifact
+    - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: PhiClient-Windows
+        name: PhiClient-${{ runner.os }}
         path: dist/
